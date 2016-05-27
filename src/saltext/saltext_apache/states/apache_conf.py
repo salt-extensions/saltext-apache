@@ -1,58 +1,61 @@
 # -*- coding: utf-8 -*-
 '''
-Manage Apache Modules
+Manage Apache Confs
 
-.. versionadded:: 2014.7.0
+.. versionadded:: 2016.3.0
 
-Enable and disable apache modules.
+Enable and disable apache confs.
 
 .. code-block:: yaml
 
-    Enable cgi module:
-        apache_module.enable:
-            - name: cgi
+    Enable security conf:
+        apache_conf.enable:
+            - name: security
 
-    Disable cgi module:
-        apache_module.disable:
-            - name: cgi
+    Disable security conf:
+        apache_conf.disable:
+            - name: security
 '''
 from __future__ import absolute_import
 from salt.ext.six import string_types
 
+# Import salt libs
+import salt.utils
+
 
 def __virtual__():
     '''
-    Only load if a2enmod is available.
+    Only load if a2enconf is available.
     '''
-    return 'apache_module' if 'apache.a2enmod' in __salt__ else False
+    return 'apache_conf' if 'apache.a2enconf' in __salt__ and salt.utils.which('a2enconf') else False
 
 
 def enabled(name):
     '''
-    Ensure an Apache module is enabled.
+    Ensure an Apache conf is enabled.
 
     name
-        Name of the Apache module
+        Name of the Apache conf
     '''
     ret = {'name': name, 'result': True, 'comment': '', 'changes': {}}
 
-    is_enabled = __salt__['apache.check_mod_enabled'](name)
+    is_enabled = __salt__['apache.check_conf_enabled'](name)
     if not is_enabled:
         if __opts__['test']:
-            msg = 'Apache module {0} is set to be enabled.'.format(name)
+            msg = 'Apache conf {0} is set to be enabled.'.format(name)
             ret['comment'] = msg
             ret['changes']['old'] = None
             ret['changes']['new'] = name
             ret['result'] = None
             return ret
-        status = __salt__['apache.a2enmod'](name)['Status']
+        status = __salt__['apache.a2enconf'](name)['Status']
         if isinstance(status, string_types) and 'enabled' in status:
             ret['result'] = True
             ret['changes']['old'] = None
             ret['changes']['new'] = name
         else:
             ret['result'] = False
-            ret['comment'] = 'Failed to enable {0} Apache module'.format(name)
+            ret['comment'] = 'Failed to enable {0} Apache conf'.format(name)
             if isinstance(status, string_types):
                 ret['comment'] = ret['comment'] + ' ({0})'.format(status)
             return ret
@@ -63,30 +66,30 @@ def enabled(name):
 
 def disabled(name):
     '''
-    Ensure an Apache module is disabled.
+    Ensure an Apache conf is disabled.
 
     name
-        Name of the Apache module
+        Name of the Apache conf
     '''
     ret = {'name': name, 'result': True, 'comment': '', 'changes': {}}
 
-    is_enabled = __salt__['apache.check_mod_enabled'](name)
+    is_enabled = __salt__['apache.check_conf_enabled'](name)
     if is_enabled:
         if __opts__['test']:
-            msg = 'Apache module {0} is set to be disabled.'.format(name)
+            msg = 'Apache conf {0} is set to be disabled.'.format(name)
             ret['comment'] = msg
             ret['changes']['old'] = name
             ret['changes']['new'] = None
             ret['result'] = None
             return ret
-        status = __salt__['apache.a2dismod'](name)['Status']
+        status = __salt__['apache.a2disconf'](name)['Status']
         if isinstance(status, string_types) and 'disabled' in status:
             ret['result'] = True
             ret['changes']['old'] = name
             ret['changes']['new'] = None
         else:
             ret['result'] = False
-            ret['comment'] = 'Failed to disable {0} Apache module'.format(name)
+            ret['comment'] = 'Failed to disable {0} Apache conf'.format(name)
             if isinstance(status, string_types):
                 ret['comment'] = ret['comment'] + ' ({0})'.format(status)
             return ret
