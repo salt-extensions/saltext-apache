@@ -1,14 +1,14 @@
 """
     :codeauthor: Jayesh Kariya <jayeshk@saltstack.com>
 """
-
 import urllib.error
+from unittest.mock import MagicMock
+from unittest.mock import mock_open
+from unittest.mock import patch
 
 import pytest
-
-import salt.modules.apache as apache
+import saltext.saltext_apache.modules.apache as apache
 from salt.utils.odict import OrderedDict
-from tests.support.mock import MagicMock, mock_open, patch
 
 
 @pytest.fixture
@@ -23,7 +23,9 @@ def test_version():
     """
     Test if return server version (``apachectl -v``)
     """
-    with patch("salt.modules.apache._detect_os", MagicMock(return_value="apachectl")):
+    with patch(
+        "saltext.saltext_apache.modules.apache._detect_os", MagicMock(return_value="apachectl")
+    ):
         mock = MagicMock(return_value="Server version: Apache/2.4.7")
         with patch.dict(apache.__salt__, {"cmd.run": mock}):
             assert apache.version() == "Apache/2.4.7"
@@ -36,7 +38,9 @@ def test_fullversion():
     """
     Test if return server version (``apachectl -V``)
     """
-    with patch("salt.modules.apache._detect_os", MagicMock(return_value="apachectl")):
+    with patch(
+        "saltext.saltext_apache.modules.apache._detect_os", MagicMock(return_value="apachectl")
+    ):
         mock = MagicMock(return_value="Server version: Apache/2.4.7")
         with patch.dict(apache.__salt__, {"cmd.run": mock}):
             assert apache.fullversion() == {
@@ -52,7 +56,9 @@ def test_modules():
     """
     Test if return list of static and shared modules
     """
-    with patch("salt.modules.apache._detect_os", MagicMock(return_value="apachectl")):
+    with patch(
+        "saltext.saltext_apache.modules.apache._detect_os", MagicMock(return_value="apachectl")
+    ):
         mock = MagicMock(
             return_value=(
                 "unixd_module (static)\n                             "
@@ -73,7 +79,9 @@ def test_servermods():
     """
     Test if return list of modules compiled into the server
     """
-    with patch("salt.modules.apache._detect_os", MagicMock(return_value="apachectl")):
+    with patch(
+        "saltext.saltext_apache.modules.apache._detect_os", MagicMock(return_value="apachectl")
+    ):
         mock = MagicMock(return_value="core.c\nmod_so.c")
         with patch.dict(apache.__salt__, {"cmd.run": mock}):
             assert apache.servermods() == ["core.c", "mod_so.c"]
@@ -86,7 +94,9 @@ def test_directives():
     """
     Test if return list of directives
     """
-    with patch("salt.modules.apache._detect_os", MagicMock(return_value="apachectl")):
+    with patch(
+        "saltext.saltext_apache.modules.apache._detect_os", MagicMock(return_value="apachectl")
+    ):
         mock = MagicMock(return_value="Salt")
         with patch.dict(apache.__salt__, {"cmd.run": mock}):
             assert apache.directives() == {"Salt": ""}
@@ -99,10 +109,12 @@ def test_vhosts():
     """
     Test if it shows the virtualhost settings
     """
-    with patch("salt.modules.apache._detect_os", MagicMock(return_value="apachectl")):
+    with patch(
+        "saltext.saltext_apache.modules.apache._detect_os", MagicMock(return_value="apachectl")
+    ):
         mock = MagicMock(return_value="")
         with patch.dict(apache.__salt__, {"cmd.run": mock}):
-            assert apache.vhosts() == {}
+            assert not apache.vhosts()
 
 
 # 'signal' function tests: 2
@@ -112,7 +124,9 @@ def test_signal():
     """
     Test if return no signal for httpd
     """
-    with patch("salt.modules.apache._detect_os", MagicMock(return_value="apachectl")):
+    with patch(
+        "saltext.saltext_apache.modules.apache._detect_os", MagicMock(return_value="apachectl")
+    ):
         mock = MagicMock(return_value="")
         with patch.dict(apache.__salt__, {"cmd.run": mock}):
             assert apache.signal(None) is None
@@ -122,21 +136,19 @@ def test_signal_args():
     """
     Test if return httpd signal to start, restart, or stop.
     """
-    with patch("salt.modules.apache._detect_os", MagicMock(return_value="apachectl")):
+    with patch(
+        "saltext.saltext_apache.modules.apache._detect_os", MagicMock(return_value="apachectl")
+    ):
         ret = 'Command: "apachectl -k start" completed successfully!'
         mock = MagicMock(return_value={"retcode": 1, "stderr": "", "stdout": ""})
         with patch.dict(apache.__salt__, {"cmd.run_all": mock}):
             assert apache.signal("start") == ret
 
-        mock = MagicMock(
-            return_value={"retcode": 1, "stderr": "Syntax OK", "stdout": ""}
-        )
+        mock = MagicMock(return_value={"retcode": 1, "stderr": "Syntax OK", "stdout": ""})
         with patch.dict(apache.__salt__, {"cmd.run_all": mock}):
             assert apache.signal("start") == "Syntax OK"
 
-        mock = MagicMock(
-            return_value={"retcode": 0, "stderr": "Syntax OK", "stdout": ""}
-        )
+        mock = MagicMock(return_value={"retcode": 0, "stderr": "Syntax OK", "stdout": ""})
         with patch.dict(apache.__salt__, {"cmd.run_all": mock}):
             assert apache.signal("start") == "Syntax OK"
 
@@ -176,7 +188,7 @@ def test_server_status():
     """
     Test if return get information from the Apache server-status
     """
-    with patch("salt.modules.apache.server_status", MagicMock(return_value={})):
+    with patch("saltext.saltext_apache.modules.apache.server_status", MagicMock(return_value={})):
         mock = MagicMock(return_value="")
         with patch.dict(apache.__salt__, {"config.get": mock}):
             assert apache.server_status() == {}
@@ -201,7 +213,7 @@ def test_config():
     Test if it create VirtualHost configuration files
     """
     with patch(
-        "salt.modules.apache._parse_config", MagicMock(return_value="Listen 22")
+        "saltext.saltext_apache.modules.apache._parse_config", MagicMock(return_value="Listen 22")
     ):
         with patch("salt.utils.files.fopen", mock_open()):
             assert apache.config("/ports.conf", [{"Listen": "22"}]) == "Listen 22"

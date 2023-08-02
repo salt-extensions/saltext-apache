@@ -1,7 +1,8 @@
-import pytest
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
-import salt.states.apache_conf as apache_conf
-from tests.support.mock import MagicMock, patch
+import pytest
+import saltext.saltext_apache.states.apache_conf as apache_conf
 
 
 @pytest.fixture
@@ -23,18 +24,16 @@ def test_enabled():
         apache_conf.__salt__,
         {"apache.check_conf_enabled": mock, "apache.a2enconf": mock_str},
     ):
-        comt = "{} already enabled.".format(name)
+        comt = f"{name} already enabled."
         ret.update({"comment": comt})
         assert apache_conf.enabled(name) == ret
 
-        comt = "Apache conf {} is set to be enabled.".format(name)
-        ret.update(
-            {"comment": comt, "result": None, "changes": {"new": name, "old": None}}
-        )
+        comt = f"Apache conf {name} is set to be enabled."
+        ret.update({"comment": comt, "result": None, "changes": {"new": name, "old": None}})
         with patch.dict(apache_conf.__opts__, {"test": True}):
             assert apache_conf.enabled(name) == ret
 
-        comt = "Failed to enable {} Apache conf".format(name)
+        comt = f"Failed to enable {name} Apache conf"
         ret.update({"comment": comt, "result": False, "changes": {}})
         with patch.dict(apache_conf.__opts__, {"test": False}):
             assert apache_conf.enabled(name) == ret
@@ -54,16 +53,16 @@ def test_disabled():
         apache_conf.__salt__,
         {"apache.check_conf_enabled": mock, "apache.a2disconf": mock_str},
     ):
-        comt = "Apache conf {} is set to be disabled.".format(name)
+        comt = f"Apache conf {name} is set to be disabled."
         ret.update({"comment": comt, "changes": {"new": None, "old": name}})
         with patch.dict(apache_conf.__opts__, {"test": True}):
             assert apache_conf.disabled(name) == ret
 
-        comt = "Failed to disable {} Apache conf".format(name)
+        comt = f"Failed to disable {name} Apache conf"
         ret.update({"comment": comt, "result": False, "changes": {}})
         with patch.dict(apache_conf.__opts__, {"test": False}):
             assert apache_conf.disabled(name) == ret
 
-        comt = "{} already disabled.".format(name)
+        comt = f"{name} already disabled."
         ret.update({"comment": comt, "result": True})
         assert apache_conf.disabled(name) == ret

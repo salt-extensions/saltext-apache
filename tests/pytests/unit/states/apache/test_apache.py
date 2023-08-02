@@ -1,12 +1,13 @@
 """
     :codeauthor: Jayesh Kariya <jayeshk@saltstack.com>
 """
+from unittest.mock import MagicMock
+from unittest.mock import mock_open
+from unittest.mock import patch
 
 import pytest
-
-import salt.states.apache as apache
 import salt.utils.files
-from tests.support.mock import MagicMock, mock_open, patch
+import saltext.saltext_apache.states.apache as apache
 
 
 @pytest.fixture
@@ -48,8 +49,6 @@ def test_configfile():
         with patch.object(salt.utils.files, "fopen", mock_open(read_data=config)):
             mock_config = MagicMock(return_value=new_config)
             with patch.dict(apache.__salt__, {"apache.config": mock_config}):
-                ret.update(
-                    {"comment": "Successfully created configuration.", "result": True}
-                )
+                ret.update({"comment": "Successfully created configuration.", "result": True})
                 with patch.dict(apache.__opts__, {"test": False}):
                     assert apache.configfile(name, config) == ret
