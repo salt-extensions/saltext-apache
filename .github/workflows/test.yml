@@ -64,11 +64,11 @@ jobs:
       max-parallel: 4
       matrix:
         python-version:
-          - 3.6
           - 3.7
           - 3.8
         salt-version:
-          - 3003
+          - 3005
+          - 3006
 
     steps:
     - uses: actions/checkout@v2
