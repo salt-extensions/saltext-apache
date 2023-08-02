@@ -63,12 +63,14 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        python-version:
-          - 3.7
-          - 3.8
-        salt-version:
-          - 3005
-          - 3006
+        include:
+          - {"salt-version": "3005.0", "python-version": "3.7"}
+          - {"salt-version": "3005.0", "python-version": "3.8"}
+          - {"salt-version": "3005.0", "python-version": "3.9"}
+          - {"salt-version": "3006.0", "python-version": "3.7"}
+          - {"salt-version": "3006.0", "python-version": "3.8"}
+          - {"salt-version": "3006.0", "python-version": "3.9"}
+          - {"salt-version": "3006.0", "python-version": "3.10"}
 
     steps:
     - uses: actions/checkout@v2
@@ -183,11 +185,11 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        python-version:
-          - 3.7
-        salt-version:
-          - 3005
-          - 3006
+        include:
+          - {"salt-version": "3005.0", "python-version": "3.8"}
+          - {"salt-version": "3006.0", "python-version": "3.8"}
+          - {"salt-version": "3006.0", "python-version": "3.9"}
+          - {"salt-version": "3006.0", "python-version": "3.10"}
 
     steps:
     - uses: actions/checkout@v2
@@ -307,11 +309,10 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        python-version:
-          - 3.7
-        salt-version:
-          - 3005
-          - 3006
+        include:
+          - {"salt-version": "3005.0", "python-version": "3.9", "source": "pypi"}
+          - {"salt-version": "3006.0", "python-version": "3.9", "source": "pypi"}
+          - {"salt-version": "3006.0", "python-version": "3.10", "source": "pypi"}
 
     steps:
     - uses: actions/checkout@v2
