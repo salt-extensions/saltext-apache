@@ -1,7 +1,7 @@
 .. _all the states/modules:
 
-Complete List of saltext-apache
-===============================
+Complete List of apache
+=======================
 
 
 .. toctree::

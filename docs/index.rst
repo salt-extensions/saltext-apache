@@ -1,5 +1,5 @@
-Welcome to saltext-apache Documentation!
-========================================
+Welcome to apache Documentation!
+================================
 
 .. toctree::
   :maxdepth: 2
