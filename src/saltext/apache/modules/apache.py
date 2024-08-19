@@ -7,6 +7,7 @@ Support for Apache
     deb_apache.py, but will still load under the ``apache`` namespace when a
     Debian-based system is detected.
 """
+
 import io
 import logging
 import re
@@ -381,6 +382,7 @@ def _parse_config(conf, slot=None):
             print(f"{conf}", file=ret, end="")
     elif isinstance(conf, list):
         is_section = False
+        slot_this = None
         for item in conf:
             if "this" in item:
                 is_section = True
@@ -397,12 +399,12 @@ def _parse_config(conf, slot=None):
                 print(_parse_config(value, str(slot)), file=ret)
     elif isinstance(conf, dict):
         try:
-            print("<{} {}>".format(slot, conf["this"]), file=ret)
-        except KeyError:
+            print(f"<{slot} {conf['this']}>", file=ret)
+        except KeyError as err:
             raise SaltException(
-                'Apache section container "<{}>" expects attribute. '
-                'Specify it using key "this".'.format(slot)
-            )
+                f'Apache section container "<{slot}>" expects attribute. '
+                'Specify it using key "this".'
+            ) from err
         for key, value in conf.items():
             if key != "this":
                 if isinstance(value, str):

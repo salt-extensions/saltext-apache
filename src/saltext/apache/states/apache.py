@@ -83,6 +83,7 @@ it still needs keyword ``this`` with empty string (or "\b" if nicer output is re
                     this: "\b"
                     do: another thing
 """
+
 import os
 
 import salt.utils.files

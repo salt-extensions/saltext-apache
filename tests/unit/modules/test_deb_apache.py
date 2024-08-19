@@ -1,11 +1,13 @@
 """
     :codeauthor: Jayesh Kariya <jayeshk@saltstack.com>
 """
+
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
 import pytest
-import salt.modules.deb_apache as deb_apache
+
+from saltext.apache.modules import deb_apache
 
 
 @pytest.fixture

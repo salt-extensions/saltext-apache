@@ -5,6 +5,7 @@ Please note: The functions in here are Debian-specific. Placing them in this
 separate file will allow them to load only on Debian-based systems, while still
 loading under the ``apache`` namespace.
 """
+
 import logging
 import os
 

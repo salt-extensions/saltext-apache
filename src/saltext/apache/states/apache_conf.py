@@ -15,6 +15,7 @@ Enable and disable apache confs.
       apache_conf.disabled:
         - name: security
 """
+
 import salt.utils.path
 
 

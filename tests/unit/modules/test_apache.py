@@ -1,14 +1,16 @@
 """
     :codeauthor: Jayesh Kariya <jayeshk@saltstack.com>
 """
+
 import urllib.error
 from unittest.mock import MagicMock
 from unittest.mock import mock_open
 from unittest.mock import patch
 
 import pytest
-import saltext.saltext_apache.modules.apache as apache
 from salt.utils.odict import OrderedDict
+
+from saltext.apache.modules import apache
 
 
 @pytest.fixture

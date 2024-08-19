@@ -2,7 +2,8 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 
 import pytest
-import saltext.saltext_apache.states.apache_conf as apache_conf
+
+from saltext.apache.states import apache_conf
 
 
 @pytest.fixture

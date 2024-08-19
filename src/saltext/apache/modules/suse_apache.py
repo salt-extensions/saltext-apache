@@ -5,6 +5,7 @@ Please note: The functions in here are SUSE-specific. Placing them in this
 separate file will allow them to load only on SUSE systems, while still
 loading under the ``apache`` namespace.
 """
+
 import logging
 
 import salt.utils.path

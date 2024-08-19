@@ -2,7 +2,8 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 
 import pytest
-import saltext.saltext_apache.states.apache_site as apache_site
+
+from saltext.apache.states import apache_site
 
 
 @pytest.fixture
