@@ -36,7 +36,7 @@ ignore_errors = True
 
 [paths]
 source =
-  saltext/saltext_apache
-  src/saltext/saltext_apache
+  saltext/apache
+  src/saltext/apache
 testsuite =
   tests/
