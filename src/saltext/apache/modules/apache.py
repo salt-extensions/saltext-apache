@@ -44,10 +44,9 @@ def _detect_os():
     os_family = __grains__["os_family"]
     if os_family == "RedHat":
         return "apachectl"
-    elif os_family == "Debian" or os_family == "Suse":
+    if os_family in ("Debian", "Suse"):
         return "apache2ctl"
-    else:
-        return "apachectl"
+    return "apachectl"
 
 
 def version():
@@ -204,6 +203,7 @@ def vhosts():
     return ret
 
 
+# pylint: disable=redefined-outer-name
 def signal(signal=None):
     """
     Signals httpd to start, restart, or stop.
@@ -218,7 +218,7 @@ def signal(signal=None):
     valid_signals = ("start", "stop", "restart", "graceful", "graceful-stop")
 
     if signal not in valid_signals and signal not in no_extra_args:
-        return
+        return None
     # Make sure you use the right arguments
     if signal in valid_signals:
         arguments = f" -k {signal}"
@@ -344,7 +344,8 @@ def server_status(profile="default"):
     # get http data
     url += "?auto"
     try:
-        response = urllib.request.urlopen(url, timeout=timeout).read().splitlines()
+        with urllib.request.urlopen(url, timeout=timeout) as http_response:
+            response = http_response.read().splitlines()
     except urllib.error.URLError:
         return "error"
 

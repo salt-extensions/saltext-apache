@@ -36,10 +36,9 @@ def _detect_os():
     # TODO: Add pillar support for the apachectl location
     if __grains__["os_family"] == "RedHat":
         return "apachectl"
-    elif __grains__["os_family"] == "Debian":
+    if __grains__["os_family"] == "Debian":
         return "apache2ctl"
-    else:
-        return "apachectl"
+    return "apachectl"
 
 
 def check_site_enabled(site):
@@ -62,10 +61,9 @@ def check_site_enabled(site):
         site_file = f"{site}.conf"
     if os.path.islink(f"{SITE_ENABLED_DIR}/{site_file}"):
         return True
-    elif site == "default" and os.path.islink(f"{SITE_ENABLED_DIR}/000-{site_file}"):
+    if site == "default" and os.path.islink(f"{SITE_ENABLED_DIR}/000-{site_file}"):
         return True
-    else:
-        return False
+    return False
 
 
 def a2ensite(site):

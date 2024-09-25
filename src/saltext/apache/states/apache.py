@@ -109,7 +109,7 @@ def configfile(name, config):
         ret["result"] = True
         ret["comment"] = "Configuration is up to date."
         return ret
-    elif __opts__["test"]:
+    if __opts__["test"]:
         ret["comment"] = "Configuration will update."
         ret["changes"] = {"old": current_configs, "new": configs}
         ret["result"] = None
@@ -121,7 +121,7 @@ def configfile(name, config):
         ret["changes"] = {"old": current_configs, "new": configs}
         ret["result"] = True
         ret["comment"] = "Successfully created configuration."
-    except Exception as exc:  # pylint: disable=broad-except
+    except Exception:  # pylint: disable=broad-except
         ret["result"] = False
         ret["comment"] = "Failed to create apache configuration."
 
