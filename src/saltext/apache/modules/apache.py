@@ -44,7 +44,7 @@ def _detect_os():
     os_family = __grains__["os_family"]
     if os_family == "RedHat":
         return "apachectl"
-    if os_family in ("Debian", "Suse"):
+    if os_family == "Debian":
         return "apache2ctl"
     return "apachectl"
 
