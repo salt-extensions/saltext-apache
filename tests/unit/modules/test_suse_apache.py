@@ -9,7 +9,7 @@ import pytest
 
 from saltext.apache.modules import suse_apache
 
-sample_a2enmod_l_output = "actions alias auth_basic authn_core authn_file authz_host authz_groupfile authz_core authz_user autoindex cgi dir env expires include log_config mime negotiation setenvif ssl socache_shmcb userdir reqtimeout apparmor proxy proxy_fcgi remoteip rewrite"
+SAMPLE_A2ENMOD_L_OUTPUT = "actions alias auth_basic authn_core authn_file authz_host authz_groupfile authz_core authz_user autoindex cgi dir env expires include log_config mime negotiation setenvif ssl socache_shmcb userdir reqtimeout apparmor proxy proxy_fcgi remoteip rewrite"
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def test_check_mod_enabled():
 
     with patch.dict(
         suse_apache.__salt__,
-        {"cmd.run": MagicMock(return_value=sample_a2enmod_l_output)},
+        {"cmd.run": MagicMock(return_value=SAMPLE_A2ENMOD_L_OUTPUT)},
     ):
         assert suse_apache.check_mod_enabled("rewrite")
 
@@ -36,7 +36,7 @@ def test_check_mod_enabled_not():
 
     with patch.dict(
         suse_apache.__salt__,
-        {"cmd.run": MagicMock(return_value=sample_a2enmod_l_output)},
+        {"cmd.run": MagicMock(return_value=SAMPLE_A2ENMOD_L_OUTPUT)},
     ):
         assert not suse_apache.check_mod_enabled("status")
 
