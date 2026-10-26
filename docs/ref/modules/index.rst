@@ -10,5 +10,3 @@ _________________
     :toctree:
 
     apache
-    deb_apache
-    suse_apache
